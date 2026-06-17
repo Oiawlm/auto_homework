@@ -1,0 +1,4 @@
+interface:
+  display_name: "EduCoder Homework Workflow"
+  short_description: "Authorized homework task workflow"
+  default_prompt: "Use $educoder-homework-workflow to complete authorized EduCoder-style homework tasks with external model assistance and answer logging."
