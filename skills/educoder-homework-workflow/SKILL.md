@@ -9,6 +9,8 @@ description: Use when completing authorized EduCoder-style intranet homework, AI
 
 Use this workflow for authorized course practice tasks on EduCoder-like platforms. The goal is to finish the task through the visible UI, use external model help when useful, and record reusable answers without bypassing authentication, CAPTCHA, platform checks, or hidden APIs.
 
+This skill is intended for Codex. It is not a standalone bot, scraper, credential manager, or platform bypass tool.
+
 ## Workflow
 
 1. If the user is working on this known course or a repeated account, search `references/answers.md` by task title, task URL, or visible progress label before generating a new answer.
@@ -38,6 +40,12 @@ Use this workflow for authorized course practice tasks on EduCoder-like platform
 - Search by exact task title first, then by task URL or level number.
 - Treat stored code as the first candidate answer, but still inspect the live task page because platform starter code, hidden tests, or environment behavior can drift.
 - When a stored answer passes for another account, keep it unchanged. When it needs adjustment, update both the live `answers.md` in the workspace and this bundled reference copy.
+
+## Public Repository Safety
+
+- Keep credentials out of the repository: no usernames, passwords, API keys, tokens, cookies, localStorage/sessionStorage dumps, or browser profiles.
+- Keep the answer bank limited to task text, task URLs, code, output notes, and platform behavior notes.
+- Before making a copy public, scan both the worktree and Git history for secret-like strings.
 
 ## Browser Editing Rules
 
