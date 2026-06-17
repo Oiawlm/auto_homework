@@ -1,6 +1,6 @@
 ---
 name: educoder-homework-workflow
-description: Use when completing authorized EduCoder-style intranet homework, AI training, programming challenge, or course workflow tasks where Codex must read visible task requirements, optionally use DBC/DeepSeek-style model assistance, submit through the browser UI, and save reusable answers or status notes.
+description: Use when completing authorized EduCoder-style intranet homework, AI training, programming challenge, or course workflow tasks where Codex must read visible task requirements, optionally use DeepSeek-style model assistance, submit through the browser UI, and save reusable answers or status notes.
 ---
 
 # Educoder Homework Workflow
@@ -26,7 +26,7 @@ This skill is intended for Codex. It is not a standalone bot, scraper, credentia
    - Starter code or current code.
    - Visible error, raw actual output, expected output if visible.
    - Do not send usernames, passwords, cookies, tokens, personal files, or private browser state to external sites.
-5. If the user requested DBC/DeepSeek assistance or the task is nontrivial, paste the captured material into the external model and ask for a concise answer. Enable the strongest reasoning/search mode available if the site exposes one.
+5. If the user requested DeepSeek assistance or the task is nontrivial, paste the captured material into the external model and ask for a concise answer. Enable the strongest reasoning/search mode available if the site exposes one.
 6. Verify the proposed answer locally or by reasoning before submitting. External model output is a draft, not proof.
 7. Submit only through the visible platform UI. Do not inspect cookies, local/session storage, hidden internal APIs, or attempt to forge completion.
 8. After each submission, read the result panel:
@@ -40,6 +40,18 @@ This skill is intended for Codex. It is not a standalone bot, scraper, credentia
 - Search by exact task title first, then by task URL or level number.
 - Treat stored code as the first candidate answer, but still inspect the live task page because platform starter code, hidden tests, or environment behavior can drift.
 - When a stored answer passes for another account, keep it unchanged. When it needs adjustment, update both the live `answers.md` in the workspace and this bundled reference copy.
+
+## Adding Missing Answers
+
+When `references/answers.md` does not contain the current task:
+
+1. Solve the task through the normal workflow.
+2. Use DeepSeek only with task text, current code, and visible evaluation feedback.
+3. Verify by submitting through the visible platform UI.
+4. Append the passed answer or diagnosed platform anomaly to the workspace `answers.md`.
+5. Copy the updated answer entry into `skills/educoder-homework-workflow/references/answers.md`.
+6. Commit and push the update, or open a PR, with a message like `docs: add answers for <task name>`.
+7. Before publishing, scan the worktree and Git history for credentials or token-like strings.
 
 ## Public Repository Safety
 

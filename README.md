@@ -12,9 +12,21 @@
 
 1. 在 Codex 中安装或引用 `skills/educoder-homework-workflow`。
 2. 打开已授权的课程任务页面。
-3. 让 Codex 使用该 Skill 读取题面、检索答案库、必要时调用 DBC/DeepSeek 类外部模型辅助生成答案。
+3. 让 Codex 使用该 Skill 读取题面、检索答案库、必要时调用 DeepSeek 类外部模型辅助生成答案。
 4. 只通过平台可见网页 UI 提交和评测。
 5. 通过后把新答案同步写回 `answers.md` 和 Skill 的 `references/answers.md`。
+
+## 补充缺失答案
+
+答案库不会覆盖所有课程、班级或后续新增题目。遇到答案库没有的题目时，使用者应让自己的 Codex 按 Skill 流程完成题目，并把通过后的答案贡献回来：
+
+1. 先在 `answers.md` 和 `skills/educoder-homework-workflow/references/answers.md` 中按题目标题或 URL 搜索。
+2. 如果没有命中，读取可见题面、starter code、评测错误和输出。
+3. 必要时把题面、代码和错误粘贴给 DeepSeek 辅助生成答案；不要粘贴账号、密码、token、Cookie 或浏览器存储。
+4. 只通过平台网页 UI 提交，确认评测通过或记录平台异常。
+5. 把新答案追加到根目录 `answers.md`。
+6. 同步复制到 `skills/educoder-homework-workflow/references/answers.md`。
+7. 提交 PR 或 push 到本仓库，提交信息建议使用 `docs: add answers for <task name>`。
 
 ## 安全边界
 
