@@ -14,6 +14,7 @@ This skill is intended for Codex. It is not a standalone bot, scraper, credentia
 ## Workflow
 
 1. If the user is working on this known course or a repeated account, search `references/answers.md` by task title, task URL, or visible progress label before generating a new answer.
+   - If the answer bank already confirms an experience task has `0` completions, no evaluation/submit entry, or an explicit no-pass requirement, classify it as a known no-pass/platform task and skip opening or retrying it for later accounts. Keep it only in the final remaining-work report unless new visible evidence shows the platform changed.
 2. Open the current task in the browser and read the visible page from top to bottom.
 3. Identify the task type:
    - Code challenge: starter code, required output, tests, current failure.
@@ -122,5 +123,6 @@ Before saying the workflow is done:
 
 - Rescan all homework pages and list every remaining `0/n` item.
 - Distinguish real remaining work from tasks marked no-pass or platform tasks with no evaluation entry.
+- Do not re-enter known no-pass/zero-completion experience tasks during the final rescan; verify their list status only.
 - Confirm `answers.md` contains the latest passed answers and anomaly notes.
 - State which tasks passed, which remain blocked by platform behavior, and what evidence supports that conclusion.
