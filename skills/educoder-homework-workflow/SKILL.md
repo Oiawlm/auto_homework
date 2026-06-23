@@ -14,8 +14,17 @@ This skill is intended for Codex. It is not a standalone bot, scraper, credentia
 ## Workflow
 
 1. If the user is working on this known course or a repeated account, search `references/answers.md` by task title, task URL, or visible progress label before generating a new answer.
-   - If the answer bank already confirms an experience task has `0` completions, no evaluation/submit entry, or an explicit no-pass requirement, classify it as a known no-pass/platform task and skip opening or retrying it for later accounts. Keep it only in the final remaining-work report unless new visible evidence shows the platform changed.
-2. Open the current task in the browser and read the visible page from top to bottom.
+   - If the answer bank contains a passed answer, use it as the first candidate.
+   - If it records a no-pass task or platform anomaly, skip it unless the recorded retry condition has changed.
+2. Enter the task through the deepest page that is already open. Use exactly one transition at a time:
+
+| Current page | Action | Success signal |
+|---|---|---|
+| Homework list | Find the row with the exact task title and click that row's `查看作品` once. | A tab with `/shixun_homework/<id>/detail` exists. |
+| Work/detail or overall-evaluation page | Focus the `/detail` tab and click the right-side `进入实训` once. | A task tab with `/tasks/` exists. |
+| Task page | Read the visible requirements and continue with the answer or evaluation. | The task title, editor, questions, or environment controls are visible. |
+
+   After each transition, inspect controlled and user-visible tabs before clicking again. If the click reports a timeout but the success-signal tab exists, continue from that tab. Prefer an existing task page over a detail page, and an existing detail page over the homework list.
 3. Identify the task type:
    - Code challenge: starter code, required output, tests, current failure.
    - Multiple-choice or short-answer: question text and options.
@@ -40,7 +49,7 @@ This skill is intended for Codex. It is not a standalone bot, scraper, credentia
 - Use `references/answers.md` as the bundled answer bank for this course snapshot.
 - Search by exact task title first, then by task URL or level number.
 - Treat stored code as the first candidate answer, but still inspect the live task page because platform starter code, hidden tests, or environment behavior can drift.
-- When a stored answer passes for another account, keep it unchanged. When it needs adjustment, update both the live `answers.md` in the workspace and this bundled reference copy.
+- When a stored answer still passes, keep it unchanged. When it needs adjustment, update its existing task section in both the workspace `answers.md` and the bundled reference copy.
 
 ## Adding Missing Answers
 
@@ -49,7 +58,7 @@ When `references/answers.md` does not contain the current task:
 1. Solve the task through the normal workflow.
 2. Use DeepSeek only with task text, current code, and visible evaluation feedback.
 3. Verify by submitting through the visible platform UI.
-4. Append the passed answer or diagnosed platform anomaly to the workspace `answers.md`.
+4. Add one canonical task section, or update the existing section in place, with the passed answer or diagnosed platform anomaly.
 5. Copy the updated answer entry into `skills/educoder-homework-workflow/references/answers.md`.
 6. Commit and push the update, or open a PR, with a message like `docs: add answers for <task name>`.
 7. Before publishing, scan the worktree and Git history for credentials or token-like strings.
@@ -62,9 +71,14 @@ When `references/answers.md` does not contain the current task:
 
 ## Browser Editing Rules
 
+- Use stored bare `/tasks/...` URLs only to identify an answer-bank entry. Enter the live task through the current classroom detail page because stored task URLs may return 403 for another classroom.
+- If an old tab is unresponsive, open one fresh classroom list page and resume the same list -> detail -> task sequence.
 - For Monaco-style editors, click the editor, press `Control+A`, press `Backspace`, then paste/fill the new code. Filling without clearing can append code to stale content.
-- After editing, inspect the visible code section before clicking evaluation.
+- After editing, inspect the visible code section and confirm required functions, class names, or changed lines are present before clicking evaluation. A plausible answer in memory is not proof that Monaco accepted it.
 - Prefer the platform's `评测` button for final checking. Use `自测运行` only for cheap local feedback.
+- After a mismatch, inspect the raw actual-output panel, including hidden diff containers and stderr warnings. Correct stdout can still fail because a library warning was included in the judged output.
+- If actual output matches the public sample, compare the reference answer, records, and comments. When the reference implementation also fails or multiple users report the same mismatch, record a platform anomaly instead of continuing blind code changes.
+- For multi-level tasks, prefer the visible `上一关`/`下一关` anchor `href` from the current course. Text clicks may not route, and stored level URLs may belong to another classroom.
 - If a reference answer is unlocked, compare it with the current editor content before submitting.
 
 ## External Model Prompt
@@ -93,7 +107,7 @@ Use a focused prompt like this:
 
 ## Recording Answers
 
-Append to `answers.md` after each completed or diagnosed task:
+Maintain one canonical section per task or course-specific variant. Update that section in place instead of adding account, date, session, or retry-history blocks.
 
 ````markdown
 ## [task title]
@@ -110,12 +124,15 @@ Append to `answers.md` after each completed or diagnosed task:
 [final code]
 ```
 
-备注：
-[only include non-obvious platform behavior, failed traps, or external-environment notes]
+关键限制：
+[only the durable condition needed to reproduce the result]
+
+平台状态：
+[only for no-pass tasks or anomalies: final evidence and the condition that justifies a future retry]
 ```
 ````
 
-For non-code experience tasks, replace the code block with the exact operation sequence and observed platform status.
+Write final-state facts only. Exclude dates, account identifiers, attempt counts, chronological narration, discarded approaches, and phrases such as "this time", "previously", or "after trying". For non-code experience tasks, replace the code block with the exact successful operation sequence or final platform limitation.
 
 ## Completion Criteria
 
@@ -125,4 +142,5 @@ Before saying the workflow is done:
 - Distinguish real remaining work from tasks marked no-pass or platform tasks with no evaluation entry.
 - Do not re-enter known no-pass/zero-completion experience tasks during the final rescan; verify their list status only.
 - Confirm `answers.md` contains the latest passed answers and anomaly notes.
+- Run `scripts/validate-docs.ps1 -WorkspaceRoot <repo-root>` to confirm the answer-bank copies match and no session-history wording was introduced.
 - State which tasks passed, which remain blocked by platform behavior, and what evidence supports that conclusion.
